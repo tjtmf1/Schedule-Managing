@@ -1,0 +1,112 @@
+<?
+	$db_passwd = "apmsetup";
+	if(!isset($_SESSION))
+	{
+		session_start();
+	}
+	include("p_db.php");
+	check_logged_in();
+	$groups = check_group();
+	include("p_menu.html");
+	
+?>
+<html>
+<meta charset="utf-8">
+<head>
+	<title>오늘 어디까지 풀래 너?::Ranking</title>
+	<style>
+	div.ranking{display: none;width: 500px; height: 500px;overflow: scroll;}
+	div.ranking>*{margin: 0 auto; line-height: 50px;}
+	<?
+		for($i = 1; $i <= count($groups); $i++)
+		{
+			?>
+				input.group:nth-of-type(<?=$i?>):checked~div.rank>div.ranking:nth-of-type(<?=$i?>){display: block;}
+			<?
+		}
+	?>
+	div.ranking td{width: 80px; height: 20px;}
+	input.group{display: none;}
+	label>div.group{float:left; width: 200px; height: 80px; text-align: center; margin-right: 50px; line-height: 80px; border-radius: 20px; transition:0.5s; color:white;}
+	div.page-wrap{padding: 50px; margin-left: 300px;}
+	div.rank{width: 500px; height: 400px;}
+	
+	<?
+		$mydb = mysql_connect("localhost", "root", "apmsetup");
+		mysql_select_db("planner", $mydb);
+		$query = "select * from member where id='".$_SESSION["id"]."'";
+		$result = mysql_query($query);
+		$row = mysql_fetch_array($result);
+		$theme = $row["theme"];
+
+		switch ($theme) {
+			case 1:
+				?>
+					label>div{background-color: #930000}
+					label>div.group:hover{background-color: #DFFFFF; color:black;}
+					div.ranking{border: 5px solid #930000}
+				<?
+				break;
+			case 2:
+				?>
+					label>div{background-color: #FF0000}
+					label>div.group:hover{background-color: #CF0000}
+					div.ranking{border: 5px solid #FF0000}
+				<?
+				break;
+			case 3:
+				?>
+					label>div{background-color: #35B62C}
+					label>div.group:hover{background-color: #058600}
+					div.ranking{border: 5px solid #35B62C}
+				<?
+				break;
+			case 4:
+				?>
+					label>div{background-color: #003399}
+					label>div.group:hover{background-color: #000363}
+					div.ranking{border: 5px solid #003399}
+				<?
+				break;
+
+			default:
+				?>
+					label>div{background-color: #9FD533}
+					label>div.group:hover{background-color: #6FA503}
+					div.ranking{border: 5px solid #9FD533}
+				<?
+				break;
+		}
+	?>
+
+	</style>
+
+</head>
+<body>
+	<div class="page-wrap">
+	<?
+		for($i = 0; $i < count($groups); $i++)
+		{
+			?>
+				<input type="radio" name="group" class="group" id="group<?=$i+1?>">
+			<?
+		}
+		for($i = 1; $i <= count($groups); $i++)
+		{
+			?>
+				<label for="group<?=$i?>"><div class="group"><?=$groups[$i-1]?></div></label>
+			<?
+		}
+		?>
+		<br><br><br><br><br><br><br>
+			<div class="rank">
+		<?
+		for($i = 0; $i < count($groups); $i++)
+		{
+			group_ranking($groups[$i]);
+		}
+	?>
+			</div>
+	</div>
+</body>
+</html>

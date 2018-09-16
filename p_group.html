@@ -1,0 +1,349 @@
+<?if(!isset($_SESSION))session_start();
+include("p_db.php");
+check_logged_in();
+$id=$_SESSION['id'];
+$db_passwd='apmsetup';
+
+include('p_menu.html');	
+mysql_connect('localhost','root',$db_passwd);
+mysql_select_db('planner');
+$query=mysql_query("select name from G where member like '%".$id."%'");
+?>
+<html>
+<head>
+	<title>오늘 어디까지 풀래 너?::Group</title>
+	<meta charset="utf-8">
+	<style>
+		label{display: inline-block}
+      div#tab input{float: left; border:3px solid ;}
+      #tab{float:left; width:300px; height: 40px; background-color: #9cc8ff; border-radius: 20px;padding:30px;}
+      #page_wrapper{margin: auto 300px;}
+
+      <?
+      mysql_connect('localhost','root',$db_passwd);
+      mysql_select_db("planner");
+      $q = mysql_query("select theme from member where id='".$id."'");
+      $theme = mysql_fetch_row($q);
+      $mytheme = $theme[0];
+      switch($mytheme)
+      {
+      	case 0:
+      		?>
+      		tr{background-color: #B9E0FF; color:black;}
+      		tr:nth-of-type(1){background-color: #0076E3; color:white;}
+      		<?
+      		break;
+      	case 1:
+      		?>
+      		tr{background-color: #FFB9B9}
+      		tr:nth-of-type(1){background-color:red; color:white;}
+      		<?
+      		break;
+      	case 2:
+      		?>
+      		tr{background-color: #FFB9B9}
+      		tr:nth-of-type(1){background-color:red; color:white;}
+      		<?
+      		break;
+      	case 3:
+      		break;
+      	case 4:
+      		break;
+      }    
+      for($i=0; $i<mysql_num_rows($query);$i++)
+      {
+         ?>
+      #group_<?=$i?>{margin: 40px 40px 40px 40px; font-family: '맑은 고딕';font-size: 18px; background-color: ; }
+         <?
+      }
+      for($i=0; $i<mysql_num_rows($query); $i++)
+      {
+         ?>
+         div#group_<?=$i?>{display: none;}
+         input[name=group]{display:none}
+         input#sel_<?=$i?>:checked~div#group_<?=$i?>{display:block;}
+
+         <?
+      }
+      ?>
+      div#group_1{background-color: }
+	</style>
+</head>
+<body>
+	<div id="page_wrapper">
+		<div id='add_group'>
+			<input button>
+		</div>
+		<div id='ok'>
+			<table border=1>
+				<tr>
+					<td>신청온 그룹</td>
+					<td>확인</td>
+				</tr>
+				
+				<?
+				$show=mysql_query("select name from g where invite like '%".$id."%'");
+				for($i=0; $i<mysql_num_rows($show);$i++)
+				{
+					$list=mysql_fetch_row($show);
+					?>
+					<tr>
+						<td><?=$list[0]?></td>
+						<td>
+							<form method=post action='p_insertmember.php'>
+								<input type=hidden name=insert value=<?=$list[0]?>>
+								<input type=submit value='추가'>
+							</form>
+						</td>
+					</tr>
+					<?
+				}
+
+				?>
+				
+			</table>
+		</div>
+		<?
+		for($i=0;$i<mysql_num_rows($query);$i++)
+		{
+			if($i==0)
+			{
+				?>
+				<input type=radio name=group id="sel_<?=$i?>" checked>
+				<?
+			}
+		?>
+			<input type=radio name=group id="sel_<?=$i?>">
+		<?
+		}
+		?>
+		<div id='tab'>
+		<?
+		for($i=0;($groupNames = mysql_fetch_row($query));$i++)
+		{
+			?>
+			<label for="sel_<?=$i?>"><?=$groupNames[0]?></lable>
+			<?
+			$group[$i]=$groupNames[0];
+			//로그인 한 사람이 운영자인지 확인.
+			$check=mysql_query("select master from G where name='".$group[$i]."' and master like '%".$id."%'");
+			if($check!=NULL)
+			{
+				if(mysql_num_rows($check)>0)
+				{
+					$acc[$i]=1;
+				}
+				else
+					$acc[$i]=0;	
+			}
+			
+		}
+		?>
+		</div>
+		<?
+		for($i=0; $i<mysql_num_rows($query);$i++)
+		{
+		?>
+		<div id='group_<?=$i?>'>
+			<?
+			$query2=mysql_query("select member from G where name='".$group[$i]."'");
+			$groupMem=mysql_fetch_array($query2);
+			$member = explode('/',$groupMem['member']);
+			?>
+			<div id="show_list_<?=$i?>">
+				<p><?=$group[$i]?></p>
+				<?
+				//친구 초대기능.
+				if($acc[$i]==1)
+				{
+					?>
+					<form action="p_invite_member.html" method=post target=blank>
+						<input type=hidden name='group' value="<?=$group[$i]?>">
+						<input type=submit value='멤버추가'>
+					</form>
+					
+					<?
+				}
+				?>
+				<table border=1>
+					<tr>
+						<td></td>
+						<td>ID</td>
+						<td>친구추가</td>
+					</tr>
+					<?
+					for($j=0; $j<count($member);$j++)
+					{
+					?>
+					<tr>
+						<td><?=$j+1?></td>
+						<td><?=$member[$j]?></td>
+						<td>
+							<?
+							$query3=mysql_query("select accept from friend where id='".$id."' and friend='".$member[$j]."'");
+							$query4=mysql_query("select accept from friend where id='".$member[$j]."' and friend='".$id."'");
+							$accept=mysql_fetch_row($query3);
+							$accept2=mysql_fetch_row($query4);
+							if($id==$member[$j])
+							{
+
+							}
+							else
+							{
+
+								if(mysql_num_rows($query4)>=1)
+								{
+									if($accept2[0]==0)
+									{
+										echo"신청중";	
+									}
+									else if($accept2[0]==1)
+									{
+										echo"친구";
+									}
+								}
+								else
+								{
+								?>
+								<form method=post action='p_applyfriend.php'>
+									<input type=hidden name=friend value=<?=$member[$j]?>>
+									<input type=submit value='추가'>
+								</form>
+								<?
+								}	
+							}				
+							?>
+						</td>
+					</tr>
+					<?
+					}
+					?>
+				</table>
+			</div>
+			<div id='notice'>
+				<p>공지사항</p>
+				<table border=1>
+					<tr border="1">						
+						<td>내용</td>
+						<td>등록일</td>
+						<td></td>
+					</tr>
+					<?
+					$query5 = mysql_query("select * from group_notice where group_name='".$group[$i]."'");					
+					for($j=0; $j<mysql_num_rows($query5);$j++)
+					{
+					?>
+					<tr>
+					<?
+						$arr=mysql_fetch_array($query5);
+						if($arr['kind']=="ToDo")
+						{
+							?>
+							<td>
+							<?
+							//그냥 공유한 사람 할일 가져다가 씀
+								$content=explode("/",$arr['content']);
+								$find=mysql_query("select * from ToDo where num=".$content[1]);
+								$todo=mysql_fetch_array($find);
+								echo"[할일] ".$todo['id']."님이 ".$todo['title']."<".$todo['start']."~".$todo['end'].">을 공유하였습니다.";
+
+							?>
+								<a href=>
+							</td>
+							<td><?=$arr['date']?></td>
+							<td>
+								<?
+								$check_first=mysql_query("select * from todo where id='".$id."' and title='".$todo['title']."' and start='".$todo['start']."' and end='".$todo['end']."'");
+								if(mysql_num_rows($check_first)<1)
+								{
+								?>
+								<form action='insertTo_Do.php' method='post' target="blank">
+									<input type=hidden name="todo" value="<?=$todo['title']?>">
+									<input type=hidden name="star" value="<?=$todo['importance']?>">
+									<input type=hidden  name="start" value="<?=$todo['start']?>">
+									<input type=hidden  name="end" value="<?=$todo['end']?>">
+									<input type=hidden  name="exp" value="<?=$todo['exp']?>">
+									<input type=hidden name="checked" value="<?=$todo["checked"]?>">
+									<input type=submit value="추가">
+								</form>	
+								<?
+								}
+								else
+								{
+								?>
+									<p id='todo_check'>추가완료</p>
+								<?
+								}
+								?>							
+							</td>
+							<?
+						}
+						else if($arr['kind']=="schedule")
+						{
+							?>
+							<td>
+							<?
+								//그냥 공유한 사람 일정 가져다가 씀
+								$content=explode("/",$arr['content']);
+								$find=mysql_query("select * from schedule where num=".$content[1]);
+								$schedule=mysql_fetch_array($find);
+								echo"[일정] ".$schedule['id']."님이 ".$schedule['schedule']."<".$schedule['start']."~".$schedule['end'].">을 공유하였습니다.";
+							?>
+							</td>
+							<td><?=$arr['date']?></td>
+							<td>
+								<?
+								$check_first=mysql_query("select * from schedule where id='".$id."' and schedule='".$schedule['schedule']."' and start='".$schedule['start']."' and end='".$schedule['end']."'");
+								if(mysql_num_rows($check_first)<1)
+								{
+								?>
+								<form action='insertSchedule.php' method='post' target="_blank">
+									<input type=hidden name="schedule" value="<?=$schedule['schedule']?>">
+									<input type=hidden name="star" value="<?=$schedule['importance']?>">
+									<input type=hidden  name="start" value="<?=$schedule['start']?>">
+									<input type=hidden  name="end" value="<?=$schedule['end']?>">
+									<input type=hidden  name="exp" value="<?=$schedule['exp']?>">
+									<input type=hidden name="place" value="<?=$schedule["place"]?>">
+									<input type=submit value="추가">
+								</form>	
+								<?
+								}
+								else
+								{
+								?>
+									<p id='todo_check'>추가완료</p>
+								<?
+								}
+								?>
+							</td>
+							<?	
+						}
+						else if($arr['kind']=="ext")
+						{
+							?>
+							<td>
+							<?
+								$a=$arr["content"];
+								echo"$a";
+							?>						
+							</td>
+							<td><?=$arr['date']?></td>
+							?>
+							<td>
+							</td>
+							<?
+						}
+					?>
+					</tr>
+					<?
+					}
+					?>
+				</table>
+			</div>
+		</div>
+		<?
+		}
+		?>
+	</div>
+</body>
+</html>

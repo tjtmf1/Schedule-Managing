@@ -1,0 +1,201 @@
+<?if(!isset($_SESSION))session_start();
+include("p_db.php");
+check_logged_in();
+$id=$_SESSION['id'];
+$db_passwd="apmsetup";
+?>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>오늘 어디까지 풀래 너?::Friend</title>
+	<style>
+		legend{background-color: #; }
+		fieldset#add_friend{border:1px solid #0076E3; width: 320px;padding: 10px; }
+		#show_friend fieldset input{}
+		fieldset{border:2px solid red; width: 800px; background-color: #}
+		
+		#page-wrapper{margin: auto;}
+		input#change{display: none}
+		input[name='change']{display:none;}
+		div#add_friend input{padding: 5px ;margin: auto;}
+		div#page-wrapper{padding:50px; margin-left: 300px}
+		div#apply{display: inline-block;}
+		
+		div#submit>input{width: 100px; height: 60px}
+		#apply{width: 80px; height: 60px}
+		div#show_friend{}
+		div#accept_friend{}
+		#friend td:nth-of-type(5){width: 300px}
+		#friend td{padding: 5px 15px;}
+		fieldset#acc_friend{width: 600px;}
+		<?
+		$connect=mysql_connect("localhost","root",$db_passwd);
+		mysql_select_db("planner");
+		$str = "select * from friend where accept=1 and id='".$id."'";
+		$query = mysql_query($str);
+		for($i=0; $i<mysql_num_rows($query);$i++)
+		{
+			?>
+			#input_<?=$i?>{display:none;}
+			input#change_<?=$i?>:checked~div#show_friend #input_<?=$i?>{display:block;}
+			<?
+		}
+		?>		
+		input#change:checked{display:none;}
+	</style>
+</head>
+<body>
+	<?include('p_menu.html');?>
+	<div id="page-wrapper">
+		<fieldset id="add_friend">
+			<legend> 친구추가 </legend>
+			<form action="p_applyfriend.php" method=post>
+				<table>
+					<tr>
+						<td><input type=text name='friend' placeholder="친구 추가할 id"></td>
+						<td rowspan=2><input id="apply" type=submit value="친구신청"></td>
+					</tr>
+					<tr>
+						<td><input type=text name='content' placeholder="신청메세지"></td>
+					</tr>
+				</table>
+			</form>
+		
+			<?			
+			if($_SESSION['notice']!=NULL)
+			{
+				echo($_SESSION['notice']);
+				$_SESSION['notice']=NULL;
+			}
+			?>
+		</fieldset>
+	
+		<?
+		
+		if($connect)
+		{
+			$db = mysql_select_db("planner");
+			if($db)
+			{
+				$str = "select * from friend where accept=1 and id='".$id."'";//
+				$query = mysql_query($str);
+				$num_friend=mysql_num_rows($query);
+				for($i=0; $i<$num_friend;$i++)
+				{
+				?>
+					<input type=radio name='change' id='change_<?=$i?>'>	
+				<?
+				}
+				?>			
+				<div id="show_friend">
+					<fieldset>
+						<legend>친구 목록</legend>
+						<form method=post action="p_deletefriend.php">
+							
+							<input type="submit" value="삭제">						
+							<table border="1" id="friend">
+								<tr>
+									<td width="20px"></td>
+									<td>아이디</td>
+									<td>이름</td>
+									<td>생일</td>
+									<td colspan=2>메모</td>
+								</tr>
+							<?
+							$i=0;
+							while($arr = mysql_fetch_array($query))
+							{
+								
+								$friend[$i] = $arr[friend];
+								$query2 = mysql_query("select * from member where id='".$friend[$i]."'");
+								$arr2 = mysql_fetch_array($query2);
+								$name[$i] = $arr2[name];
+								$birthday[$i] = $arr2[birthyear].".".$arr2[birthmonth].".".$arr2[birthday];
+								$content[$i] = $arr['content']
+								?>
+								<tr>
+									<td><input type="checkbox" name=<?='num_'.$i?> value=<?=$friend[$i]?>></td>
+						
+									<td><?=$friend[$i]?></td>
+									<td><?=$name[$i]?></td>
+									<td><?=$birthday[$i]?></td>
+									<td class='memo'><?=$content[$i]?></td>
+									<td class='memo'><label for='change_<?=$i?>'>수정</label></td>
+								</tr>
+								
+															
+								<?
+								$i++;
+							}
+							?>
+							</table>
+						</form>
+						<?
+						for($i=0; $i<$num_friend; $i++)
+						{
+						?>
+						<form method=post action='p_change_memo.php'>
+							<div id='input_<?=$i?>'>
+								<input type=text name="<?=$friend[$i]?>" value="<?=$content[$i]?>">
+								<input type=submit value='수정'>
+							</div>	
+						</form>
+					</fieldset>
+					<?
+					}
+					?>
+				</div>
+				<div id="accept_friend">
+					<fieldset id="acc_friend">
+					<legend>신청한 예비 친구 목록</legend>	
+						<?
+						$str2="select * from friend where accept=0 and id='".$id."'";
+						$query3 = mysql_query($str2);
+						if(mysql_num_rows($query3)!=0)
+						{?>
+							<table border='1' id='accept'>
+								<tr>
+									<td>신청자</td>
+									<td>신청문구</td>
+									<td>확인</td>
+								</tr>
+								<?
+							while($acc=mysql_fetch_array($query3))
+							{	
+								$pfriend[$i]=$acc['friend'];
+								$content = $acc['content'];
+								?>
+								<tr>
+									<td><?=$pfriend[$i]?></td>
+									<td><?=$content?></td>
+									<td>
+									<form method=post action='p_addfriend.php'>
+											<input type=hidden name=friend value=<?=$pfriend[$i]?>>
+											<input type=submit value='추가'>
+										</form>
+										<form method=post action='p_deletefriend.php'>
+											<input type=hidden name='num_0' value=<?=$pfriend[$i]?>>
+											<input type=submit value='삭제'>
+										</form>
+									</td>
+								</tr>
+								<?
+							}
+						}
+						else
+							echo"목록이 없습니다.";
+						?>
+						</table>
+					</fieldset>
+				</div>
+				<?
+			}
+			else
+				echo"해당 디비가 존재하지 않습니다.";
+		}
+		else
+			echo"연결에 실패하였습니다.";
+		?>
+	</div>
+</body>
+</html>

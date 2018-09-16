@@ -1,0 +1,278 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<style>
+		<?
+   $id = $_SESSION["id"];
+   $connect = mysql_connect("localhost","root","apmsetup");
+    $db=mysql_select_db("planner",$connect);
+    $themasql="select theme from member where id='$id'";
+    $the=mysql_query($themasql);
+    $thenum=mysql_fetch_array($the);
+   ?>
+   <?
+      if(0==$thenum['theme']){?>
+      div.menu{float:left;  border: none; width:300px; height: 1000px;}
+      div.menu div{width:200px; height: 70px;text-align: left; padding: 0 20px 0 30px;line-height: 70px; border: 2px solid white;background-color: #9FD533; transition:0.3s;
+                font-family: sen-serif;}
+      div#blank{width:250px;height:900px;background-color: #98B754; padding: 0;}
+      <?
+      $page=$_SERVER[PHP_SELF];
+      if($page=="/main.html")
+      { 
+         ?>
+         div#main{background-color: #0076E3;width: 250px; text-align: right; border-radius: 0 50px 50px 0;}
+         <?
+      }
+      else if($page=="/calendar_page.html")
+      {
+         ?>
+         div#calendar{background-color: #0076E3;width: 250px; text-align: right; border-radius: 0 50px 50px 0;}
+         <?
+      }
+      else if($page=="/p_setfriend.html")
+      {
+         ?>
+         div#friend{background-color: #0076E3;width: 250px; text-align: right; border-radius: 0 50px 50px 0;}
+         <?
+      }
+      else if($page=="/setting.html")
+      {
+         ?>
+         div#setting{background-color: #0076E3;width: 250px; text-align: right; border-radius: 0 50px 50px 0;}
+         <?
+      }
+      else if($page=="/ranking.html")
+      {
+         ?>
+         div#rank{background-color: #0076E3;width: 250px; text-align: right; border-radius: 0 50px 50px 0;}
+         <?
+      }
+      else if($page=="/p_group.html")
+      {
+         ?>
+         div#group{background-color: #0076E3;width: 250px; text-align: right; border-radius: 0 50px 50px 0;}
+         <? 
+      }
+      ?>
+      div#main:hover{width:250px;}
+      div.menu>a>div:hover{width: 250px; border-radius: 0 50px 50px 0;}
+      a{text-decoration:none; color:white; font-size: 20px}
+      <?
+      }
+      if (1==$thenum['theme']){?>
+      div.menu{float:left;  border: none; width:300px; height: 1000px;}
+      div.menu div{width:200px; height: 70px;text-align: left; padding: 0 20px 0 30px;line-height: 70px; border: 2px solid white; transition:0.5s; font-family: sen-serif; background:#B70000; }
+      div#blank{width:250px ; height:900px; background-color: #930000; padding: 0;}
+      <?
+      $page=$_SERVER[PHP_SELF];
+      if($page=="/main.html")
+      { 
+         ?>
+         div#main{background-color: #C9AE00;width: 250px; text-align: right; border-radius: 0 50px 50px 0;}
+         <?
+      }
+      else if($page=="/calendar_page.html")
+      {
+         ?>
+         div#calendar{background-color: #C9AE00;width: 250px; text-align: right; border-radius: 0 50px 50px 0;}
+         <?
+      }
+      else if($page=="/ranking.html")
+      {
+         ?>
+         div#rank{background-color: #C9AE00;width: 250px; text-align: right; border-radius: 0 50px 50px 0;}
+         <?
+      }
+      else if($page=="/p_setfriend.html")
+      {
+         ?>
+         div#friend{background-color: #C9AE00;width: 250px; text-align: right; border-radius: 0 50px 50px 0;}
+         <?
+      }
+      else if($page=="/setting.html")
+      {
+         ?>
+         div#setting{background-color: #C9AE00;width: 250px; text-align: right; border-radius: 0 50px 50px 0;}
+         <?
+      }
+      else if($page=="/p_group.html")
+      {
+         ?>
+         div#group{background-color: #C9AE00;width: 250px; text-align: right; border-radius: 0 50px 50px 0;}
+         <?   
+      }
+      ?>
+      /*div.menu{position: fixed; top: 0; left: 0; margin-right: 300px;}*/
+   
+      div.menu>a>div:hover{width: 250px; border-radius: 0 50px 50px 0; background-color: #DFFFFF;color: black;}
+        
+      a{text-decoration:none; color:white; font-size: 20px}
+      <?}?>
+      <?if (2==$thenum['theme']){?>
+      div.menu{float:left;  border: none; width:300px; height: 1000px;}
+      div.menu div{width:200px; height: 70px;text-align: left; padding: 0 20px 0 30px;line-height: 70px; border: 2px solid white; transition:0.5s; font-family: sen-serif; background:#121212; }
+      div#blank{width:250px ; height:900px; background-color: #FF0000; padding: 0;}
+      <?
+      $page=$_SERVER[PHP_SELF];
+      if($page=="/main.html")
+      { 
+         ?>
+         div#main{background-color: #FFE400;width: 250px; text-align: right; border-radius: 0 50px 50px 0;color: black;}
+         <?
+      }
+      else if($page=="/calendar_page.html")
+      {
+         ?>
+         div#calendar{background-color: #FFE400;width: 250px; text-align: right; border-radius: 0 50px 50px 0;color: black;}
+         <?
+      }
+      else if($page=="/ranking.html")
+      {
+         ?>
+         div#rank{background-color: #FFE400;width: 250px; text-align: right; border-radius: 0 50px 50px 0;color: black;}
+         <?
+      }
+      else if($page=="/p_setfriend.html")
+      {
+         ?>
+         div#friend{background-color: #FFE400;width: 250px; text-align: right; border-radius: 0 50px 50px 0;color: black;}
+         <?
+      }
+      else if($page=="/setting.html")
+      {
+         ?>
+         div#setting{background-color: #FFE400;width: 250px; text-align: right; border-radius: 0 50px 50px 0;color: black;}
+         <?
+      }
+      else if($page=="/p_group.html")
+      {
+         ?>
+         div#group{background-color: #FFE400;width: 250px; text-align: right; border-radius: 0 50px 50px 0;color: black;}
+         <?   
+      }
+      ?>
+   
+      div.menu>a>div:hover{width: 250px; border-radius: 0 50px 50px 0;}
+        
+      a{text-decoration:none; color:white; font-size: 20px}
+      <?}?>
+
+      <?if (3==$thenum['theme']){?>
+      div.menu{float:left;  border: none; width:300px; height: 1000px;}
+      div.menu div{width:200px; height: 70px;text-align: left; padding: 0 20px 0 30px;line-height: 70px; border: 2px solid white; transition:0.5s; font-family:  sen-serif; background:#ABABAB; }
+      div#blank{width:250px ; height:900px; background-color: #35B62C; padding: 0;}
+      <?
+      $page=$_SERVER[PHP_SELF];
+      if($page=="/main.html")
+      { 
+         ?>
+         div#main{background-color: #6799FF;width: 250px; text-align: right; border-radius: 0 50px 50px 0;}
+         <?
+      }
+      else if($page=="/calendar_page.html")
+      {
+         ?>
+         div#calendar{background-color: #6799FF;width: 250px; text-align: right; border-radius: 0 50px 50px 0;}
+         <?
+      }
+      else if($page=="/ranking.html")
+      {
+         ?>
+         div#rank{background-color: #6799FF;width: 250px; text-align: right; border-radius: 0 50px 50px 0;}
+         <?
+      }
+      else if($page=="/p_setfriend.html")
+      {
+         ?>
+         div#friend{background-color: #6799FF;width: 250px; text-align: right; border-radius: 0 50px 50px 0;}
+         <?
+      }
+      else if($page=="/setting.html")
+      {
+         ?>
+         div#setting{background-color: #6799FF;width: 250px; text-align: right; border-radius: 0 50px 50px 0;}
+         <?
+      }
+      else if($page=="/p_group.html")
+      {
+         ?>
+         div#group{background-color: #6799FF;width: 250px; text-align: right; border-radius: 0 50px 50px 0;}
+         <?   
+      }
+      ?>
+      /*div.menu{position: fixed; top: 0; left: 0; margin-right: 300px;}*/
+   
+      div.menu>a>div:hover{width: 250px; border-radius: 0 50px 50px 0;}
+        
+      a{text-decoration:none; color:white; font-size: 20px}
+      <?}?>
+      <?if (4==$thenum['theme']){?>
+      div.menu{float:left;  border: none; width:300px; height: 1000px;}
+      div.menu div{width:200px; height: 70px;text-align: left; padding: 0 20px 0 30px;line-height: 70px; border: 2px solid white; transition:0.5s; font-family: sen-serif; background:#003399; }
+      div#blank{width:250px ; height:900px; background-color: #EDEDED; padding: 0;}
+      <?
+      $page=$_SERVER[PHP_SELF];
+      if($page=="/main.html")
+      { 
+         ?>
+         div#main{background-color: #6799FF;width: 250px; text-align: right; border-radius: 0 50px 50px 0;}
+         <?
+      }
+      else if($page=="/calendar_page.html")
+      {
+         ?>
+         div#calendar{background-color: #6799FF;width: 250px; text-align: right; border-radius: 0 50px 50px 0;}
+         <?
+      }
+      else if($page=="/ranking.html")
+      {
+         ?>
+         div#rank{background-color: #6799FF;width: 250px; text-align: right; border-radius: 0 50px 50px 0;}
+         <?
+      }
+      else if($page=="/p_setfriend.html")
+      {
+         ?>
+         div#friend{background-color: #6799FF;width: 250px; text-align: right; border-radius: 0 50px 50px 0;}
+         <?
+      }
+      else if($page=="/setting.html")
+      {
+         ?>
+         div#setting{background-color: #6799FF;width: 250px; text-align: right; border-radius: 0 50px 50px 0;}
+         <?
+      }
+      else if($page=="/p_group.html")
+      {
+         ?>
+         div#group{background-color: #6799FF;width: 250px; text-align: right; border-radius: 0 50px 50px 0;}
+         <?   
+      }
+      ?>
+      /*div.menu{position: fixed; top: 0; left: 0; margin-right: 300px;}*/
+   
+      div.menu>a>div:hover{width: 250px; border-radius: 0 50px 50px 0;}
+        
+      a{text-decoration:none; color:white; font-size: 20px}
+      <?}?>
+      div#logout{width: 170px; margin: 0 auto; margin-top: 100px; transition:0.5s; text-align: center;  border-radius: 50px;}
+      div#logout:hover{width:100px;}
+      p.a{text-align: center; color:white;font-size: 25px}
+		</style>
+</head>
+<body>
+	<div class="menu">
+		<a href="main.html"><div id="main">메인</div></a>
+		<a href="calendar_page.html"><div id="calendar">달력</div></a>
+		<a href="p_setfriend.html"><div id="friend">친구</div></a>
+		<a href="ranking.html"><div id="rank">랭킹</div></a>
+		<a href="setting.html"><div id="setting">설정</div></a>
+		<a href="p_group.html"><div id="group">그룹</div></a>
+		<div id="blank">
+   		<a href="logout.php"><div id="logout">로그아웃</div></a>
+         <p class='a'>어서오세요<br><?=$id?>님</p>
+      </div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<?if(!isset($_SESSION))session_start();?>
+<!doctype html>
+<html>
+<head>
+  <title>
+    오늘 어디까지 풀래 너?::Login
+  </title>
+   <meta charset="utf-8">
+   <style> 
+   @import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+  	@import url(http://fonts.googleapis.com/earlyaccess/nanumpenscript.css);
+    *{font-family: "Nanum Gothic" "굴림";}
+    body{text-align: center; margin: 50px 0px 0px 0px;background-image:url(woodtex.jpg); font-family: "Nanum Gothic" "굴림";}
+    #login_form{padding: auto 80px; ;margin: 0px auto; width:730px; height: 1200px;
+    	background-image: url(cover.png); background-repeat: no-repeat; color:white;}
+    #login_box{margin-top: 130px;}
+    #id,#passwd{height: 40px;width:350px; margin: 10px auto; background-color: #ffffff;padding:0,; font-size: 20px; border:0px;}
+    #id_box,#passwd_box{width: 400px; height: 60px; background-color: white;  border: 2px solid #3b9cff; border-radius: 5px; margin: 10px auto}
+    #submit input{height: 70px;width:200px; margin: 20px auto; background-color: #3b9cff; border-radius: 10px;color: #ffffff; font-weight: bold; font-size: 30px; transition: background-color 300ms ease, color 300ms ease;}
+    #submit input:hover{color:#003c89; background-color: #9cc8ff}
+    #login_form>a{text-decoration: none; margin:0;cursor: pointer;
+    	transition: color 500ms ease, text-shadow 500ms ease; color:#9FD533; }
+    #login_form>a:hover{text-shadow:0 0 30px #9FD533; color:white}
+   	p#one{font-size: 100px; font-family:'Nanum Pen Script', '맑은 고딕',serif;font-weight: bold; margin:0; padding-top: 110px}
+    p#two{font-size: 150px; font-family:'Nanum Pen Script', '맑은 고딕',serif; margin:0; font-weight: bold}
+       </style>
+</head>
+<body>
+   <div id="login_form">
+      <a href = "p_login.php"><p id='one'>오늘 어디까지</p><p id='two'>풀래 너?</p></a>
+      <form action ="p_login.php" method="post">
+         <div id="login_box">
+            <div id="id_box">
+               <input type="text" name="id" id="id" placeholder="아이디">
+            </div>
+            <div id="passwd_box">
+               <input type="password" name="passwd" id="passwd" placeholder="비밀번호">
+            </div>
+         </div>
+         <div id="submit">
+            <input type ="submit" value = "로그인">
+            <a href="SignUpForm.html"><input type = "button" value="회원가입"></a>
+         </div>
+      </form>
+      <?
+      if($_SESSION['flash']!=NULL)
+      {
+        echo($_SESSION["flash"]);
+      $_SESSION['flash'] = NULL;
+      }
+      ?>
+   </div> 
+</body>
+</html>

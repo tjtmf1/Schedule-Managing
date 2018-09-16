@@ -1,0 +1,92 @@
+<?if(!isset($_SESSION))
+	{
+		session_start();
+	}
+	include("p_db.php");
+?>
+<html>
+<meta charset="utf-8">
+<head>
+	<title>오늘 어디까지 풀래 너?::SignUp</title>
+	<style>
+	div.page-wrap{margin:0 auto; margin-top:30px; text-align: center; width: 800px;}
+	div.head{height: 200px; width: 1000px; margin: 0 auto; background-color: #AAA;}
+	table{width:500px; margin: 0 auto;}
+	td{text-align: center; height:50px;}
+	p{color: red;}
+	</style>
+</head>
+<body>
+	<div class="head">
+	</div>
+	<div class="page-wrap">
+		<form action="" method="POST">
+			<table>
+				<tr>
+					<td>아이디 </td><td><input type="text" name = "id"></td>
+				</tr>
+				<tr>
+					<td>비밀번호 </td><td><input type="password" name = "password"></td>
+				</tr>
+				<tr>
+					<td>비밀번호 확인 </td><td><input type="password" name = "passwordcheck"></td>
+				</tr>
+				<tr>
+					<td>이름 </td><td><input type="text" name = "name"></td>
+				</tr>
+				<tr>
+					<td>생년월일 </td>
+					<td>
+						<select name="year">
+						<?
+							for($i = 1950; $i <= 2015; $i++)
+							{
+								?>
+									<option value=<?=$i?>><?=$i?></option>
+								<?
+							}
+						?></select>년 
+						<select name="month">
+						<?
+							for($i = 1; $i <= 12; $i++)
+							{
+								?>
+									<option value=<?=$i?>><?=$i?></option>
+								<?
+							}
+						?></select>월 
+						<select name="day">
+						<?
+							for($i = 1; $i <= 31; $i++)
+							{
+								?>
+									<option value=<?=$i?>><?=$i?></option>
+								<?
+							}
+						?></select>일 
+					</td>
+				</tr>
+				<tr><td colspan="2"><input type="submit" value="가입하기"></td></tr>
+			</table>
+		</form>
+		<p>
+		<?
+			if($_POST)
+			{
+				if(SignUp($_POST["id"], $_POST["password"], $_POST["passwordcheck"], $_POST["name"], $_POST["year"], $_POST["month"], $_POST["day"], $str))
+				{
+					echo($str);
+					?>
+					<meta http-equiv="refresh" content = "1; url = p_login.html">
+					<?
+				}
+				else
+				{
+					echo($str);
+				}
+			}
+		?>
+		</p>
+	</div>
+</body>
+</html>

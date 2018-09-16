@@ -1,0 +1,63 @@
+<?
+	if(!isset($_SESSION))
+		session_start();
+	include("p_db.php");
+	check_logged_in();
+?>
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+<head>
+	<title>오늘 어디까지 풀래 너?::일정 추가</title>
+	<style>
+	#pagewrapper{padding: 50px; margin: 0 auto; border-radius: 25px; border: 3px solid blue; width: 500px; margin-top: 100px;}
+	#pagewrapper>form{margin-left: 20px;}
+	div.tab{display:none;}
+	input.kschedule:checked~div#schedule{display: block;}
+	input.ktodo:checked~div#todo{display: block;}
+	</style>
+</head>
+<body>
+	<div id="pagewrapper">
+		<input type="radio" name="kind" class="kschedule" checked>스케줄
+		<input type="radio" name="kind" class="ktodo">할일
+		<div id="schedule" class="tab">
+			<form action="insertSchedule.php" method="post">
+				일정<input type="text" name="schedule"><br/>
+				중요도
+				<select name="star">
+					<option value="1">★</option>
+					<option value="1">★★</option>
+					<option value="1">★★★</option>
+					<option value="1">★★★★</option>
+					<option value="1">★★★★★</option>
+				</select><br>
+				시작일 <input type="date" name="start" value="<?=date("Y-m-d")?>"><br/>
+				종료일 <input type="date" name="end" value="<?=date("Y-m-d")?>"><br/>
+				장소 <input type="text" name="place"><br/>
+				설명 <textarea name="exp" row="5" col="20"></textarea></br>
+				<input type="submit" value="스케줄추가"><input type="reset" value="다시작성">
+			</form>
+		</div>
+		<div id="todo" class="tab">
+			<form action="insertTo_Do.php" method="post">
+				제목<input type="text" name="todo"><br/>
+				중요도
+				<select name="star">
+					<option value="1">★</option>
+					<option value="1">★★</option>
+					<option value="1">★★★</option>
+					<option value="1">★★★★</option>
+					<option value="1">★★★★★</option>
+				</select><br>
+				시작일 <input type="date" name="start" value="<?=date("Y-m-d")?>"><br/>
+				종료일 <input type="date" name="end" value="<?=date("Y-m-d")?>"><br/>
+				설명 <textarea name="exp" row="5" col="20"></textarea></br>
+				<input type="submit" value="일정추가"><input type="reset" value="다시작성">
+		</form>
+		</div>
+		<?=$_SESSION["error"]?>
+		<?$_SESSION["error"]=""?>
+	</div>
+</body>
+</html>

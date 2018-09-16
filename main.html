@@ -1,0 +1,180 @@
+<?
+    if(!isset($_SESSION))
+    {
+        session_start();
+    }
+    $db_passwd="apmsetup";
+?>
+<meta charset="utf-8">
+<html>
+<head>
+    <?
+        include("p_menu.html")
+    ?>
+    <title>오늘 어디까지 풀래 너?::Main</title>
+    <style>
+        @import url(http://fonts.googleapis.com/earlyaccess/jejugothic.css);
+        *{font-family:'Jeju Gothic', sans-serif; margin:0 ; padding:0;}
+            <?
+    $id = $_SESSION["id"];
+    $connect = mysql_connect("localhost","root","apmsetup");
+    $db=mysql_select_db("planner",$connect);
+    $themenum=$_POST['theme'];
+    $db="update planner set theme=$temenum where id='$id'";
+    $themesql="select theme from member where id='$id'";
+    $the=mysql_query($themesql);
+    $thenum=mysql_fetch_array($the);
+    ?>  
+    .homewo{ background-color: rgba(255,255,255,0.8);}
+    .todo{ background-color: rgba(255,255,255,0.8);}
+        <?if (0==$thenum['theme']){?>
+        .todo{width: 800px; margin: 20px;border: solid 5px #86E57F;display: inline-block;padding: 10px;float: left;}
+        .homewo{width: 800px;margin: 20px;border: solid 5px #86E57F;float: left;padding: 10px;color: #5853EB;}
+        .spe{width: 800px;margin: 20px;border: solid 5px #86E57F;float: left;padding: 10px; color: #ED9595;}
+        #ma{background-image:url(0.jpg);}
+        <? }?>
+        <?if (1==$thenum['theme']){?>
+        .todo{width: 800px; margin: 20px;border: solid 5px #ED0000;display: inline-block;padding: 10px;float: left;}
+        .homewo{width: 800px;margin: 20px;border: solid 5px #ED0000;float: left;padding: 10px;color: #5853EB;}
+        .spe{width: 800px;margin: 20px;border: solid 5px #ED0000;float: left;padding: 10px; color: #ED9595;}
+        #ma{background-image:url(ironback.jpg);}
+        <? }?>
+        <?if (2==$thenum['theme']){?>
+        .todo{width: 800px; margin: 20px;border: solid 5px #000000;display: inline-block;padding: 10px;float: left;}
+        .homewo{width: 800px;margin: 20px;border: solid 5px #000000;float: left;padding: 10px;color: #5853EB;}
+        .spe{width: 800px;margin: 20px;border: solid 5px #000000;float: left;padding: 10px; color: #ED9595;}
+        #ma{background-image:url(micback.jpg);}
+        <? }?>
+        <?if (3==$thenum['theme']){?>
+        .todo{width: 800px; margin: 20px;border: solid 5px #8C8C8C;display: inline-block;padding: 10px;float: left;}
+        .homewo{width: 800px;margin: 20px;border: solid 5px #8C8C8C;float: left;padding: 10px;color: #5853EB;}
+        .spe{width: 800px;margin: 20px;border: solid 5px #8C8C8C;float: left;padding: 10px; color: #ED9595;}
+        #ma{background-image:url(totoroback.jpg);}
+        <? }?>
+        <?if (4==$thenum['theme']){?>
+        .todo{width: 800px; margin: 20px;border: solid 5px #003399;display: inline-block;padding: 10px;float: left;}
+        .homewo{width: 800px;margin: 20px;border: solid 5px #003399;float: left;padding: 10px;color: #5853EB;}
+        .spe{width: 800px;margin: 20px;border: solid 5px #003399;float: left;padding: 10px; color: #ED9595;}
+        #ma{background-image:url(minback.jpg);}
+        <? }?>
+        #page{width:1100px;margin-left: auto;margin-right: auto;}
+        .ala{padding: 20px;font-weight: bold;}
+        .todo div{margin: 10px;color: black;}
+        .homewo div{margin: 10px;color: black;}
+        .spe div{margin: 10px;color: black;}
+        .ala table{animation:1s myanim;
+            animation-iteration-count: 300; background-color: rgba(255,255,255,0.8);
+        }
+        body{margin: 8px;}
+        @keyframes myanim{
+            0% {color: black;}
+            100% {color: red;}
+        }
+    </style>
+</head>
+    <body id="ma">
+        <?  $connect = mysql_connect("localhost","root",$db_passwd);
+            $db=mysql_select_db("planner",$connect);
+            $day=date("Ymd");
+            $td = "select * from ToDo where replace(start,'-','')<=$day and replace(end,'-','') >=$day and id='".$_SESSION["id"]."'";
+            $ala = "select * from ToDo where (replace(end,'-','') =$day+1 or replace(end,'-','')=$day)  and checked=0 and id='".$_SESSION["id"]."'";
+            $sch = "select * from Schedule where replace(start,'-','')<=$day and replace(end,'-','')>=$day and id='".$_SESSION["id"]."'";
+            $trows = mysql_query($td);
+            $arows = mysql_query($ala);
+            $srows = mysql_query($sch);
+            ?>
+        <div id="page">
+            <div class="ala">
+                   <table border="1" cellspacing="0">
+                    <tr>
+                        <th>제목</th>
+                        <th>중요도</th>
+                        <th>시작일</th>
+                        <th>종료일</th>
+                        <th>설명</th>
+                    </tr>
+                <?
+                for($i=0;$i<mysql_num_rows($arows);$i++)
+                    {$arow=mysql_fetch_array($arows);
+                ?>
+                    <tr>
+                        <td><?=$arow['title']?></td>
+                        <td><?=$arow['importance']?></td>
+                        <td><?=$arow['start']?></td>
+                        <td><?=$arow['end']?></td>
+                        <td><?=$arow['exp']?></td>
+                    </tr>
+                    <?
+                }
+                    ?>
+                    </table>
+            </div>
+            <div class="todo">
+                <p>해야할일</p>
+                <div>
+                    <table border="1" cellspacing="0">
+                    <tr>
+                        <th>제목</th>
+                        <th>중요도</th>
+                        <th>시작일</th>
+                        <th>종료일</th>
+                        <th>설명</th>
+                        <th>완료여부</th>
+                    </tr>
+                <?
+                for($i=0;$i<mysql_num_rows($trows);$i++)
+                    {$trow=mysql_fetch_array($trows);
+                ?>
+                    <tr>
+                        <td><?=$trow['title']?></td>
+                        <td><?=$trow['importance']?></td>
+                        <td><?=$trow['start']?></td>
+                        <td><?=$trow['end']?></td>
+                        <td><?=$trow['exp']?></td>
+                        <td>
+                            <?
+                                if($trow['checked'])
+                                    echo("완료");
+                                else
+                                    echo("미완료");
+                            ?>
+                        </td>
+                    </tr>
+                    <?
+                }
+                    ?>
+                    </table>
+                </div>
+            </div>
+            <div class="homewo">
+                <p>일정</p>
+                <div>
+                    <table border="1" cellspacing="0">
+                        <tr>
+                            <th>제목</th>
+                            <th>중요도</th>
+                            <th>시작일</th>
+                            <th>종료일</th>
+                            <th>장소</th>
+                            <th>설명</th>
+                        </tr>
+                <?
+                for($i=0;$i<mysql_num_rows($srows);$i++)
+                    {$srow=mysql_fetch_array($srows);
+                ?>
+                    <tr>
+                        <td><?=$srow['schedule']?></td>
+                        <td><?=$srow['importance']?></td>
+                        <td><?=$srow['start']?></td>
+                        <td><?=$srow['end']?></td>
+                        <td><?=$srow['place']?></td>
+                        <td><?=$srow['exp']?></td>
+                    </tr>
+                            <?
+                }
+                    ?>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>

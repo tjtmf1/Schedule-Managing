@@ -1,0 +1,121 @@
+<?if(!isset($_SESSION))session_start();
+include("p_db.php");
+check_logged_in();
+$id=$_SESSION['id'];
+$db_passwd='apmsetup';
+$_SESSION['alram']=false;
+?>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>그룹 멤버 추가</title>
+	<style>
+		#wrapper{margin: auto; padding: 50px; border-radius: 30px; width:500px; text-align: center;}
+		table{margin: auto;width: 300px; text-align:center; border:1px solid white;
+			margin-bottom: 20px; background-color: black}
+		table tr{height: 40px}
+		input[type=text]{height: 30px}
+		input[type=submit]{color:black; background-color: white; width: 50px; height: 30px}
+		fieldset{border-radius: 30px; border:3px solid white;margin: 40px 0;}
+		input[type=checkbox]{width: 20px; height:20px;}
+		<?
+		mysql_connect('localhost','root',$db_passwd);
+		mysql_select_db('planner');
+		$query=mysql_query("select theme from member where id='".$id."'");
+		$theme=mysql_fetch_row($query);
+		switch ($theme[0]) {
+			case 0:
+				?>#wrapper{background-color:#CAFF5F }
+				td{background-color:#CAFF5F}<?
+				break;
+			case 1:
+				?>#wrapper{background-color:#FF7D7D }
+				td{background-color:#FF7D7D }<?
+				break;
+			case 2:
+				?>#wrapper{background-color:#FFFD7D }
+				td{background-color:#FFFD7D}<?
+				break;
+			case 3:
+				?>#wrapper{background-color:#D3D3D3 }
+				td{background-color:#D3D3D3}<?
+				break;
+			case 4:
+				?>#wrapper{background-color:#B0BCFF }
+				td{background-color:#B0BCFF}<?
+				break;	
+		}
+		?>
+
+
+	</style>
+</head>
+<body>
+	<?
+	$connect=mysql_connect("localhost","root",$db_passwd);
+	mysql_select_db("planner");
+	$num=0;
+	?>
+	<div id='wrapper'>
+		<fieldset id='search'>
+			<legend>아이디로 검색</legend>
+			<form action="p_add_mem.php" method=post>
+				아이디:<input type=text name='mem_0'>
+				<input type=hidden name='group' value="<?=$_REQUEST['group']?>">
+				<input type=submit  value="추가">
+			</form>
+		</fieldset>
+		<div id='friend'>
+			<fieldset id='f'>
+			<legend>친구들 추가</legend>
+			<form action="p_add_mem.php" method=post>
+				<table border=1>
+					<tr>
+						<td></td>
+						<td>친구</td>
+					</tr>
+					<?
+					$query=mysql_query("select friend from friend where id='".$id."' and accept=1");
+					
+					for($i=0 ; $i<mysql_num_rows($query);$i++)
+					{
+						$friend=mysql_fetch_array($query);
+						$query2=mysql_query("select * from g where name='".$_REQUEST['group']."' and member like '%".$friend['friend']."%'");
+						$already=mysql_num_rows($query2);
+						$query3=mysql_query("select * from g where name='".$_REQUEST['group']."' and invite like '%".$friend['friend']."%'");
+						$already2=mysql_num_rows($query3);
+						if($already==0 && $already2==0)
+						{
+							?>
+							<tr>
+								<td>
+									<input type=hidden name='group' value="<?=$_REQUEST['group']?>">
+									<input type=checkbox name="mem_<?=$i?>" value="<?=$friend['friend']?>">
+								</td>
+								<td><?=$friend['friend']?></td>
+							</tr>
+							<?
+						}
+					}
+					?>
+				</table>
+				<input type=submit value="추가" id='a'>
+			</form>
+			</fieldset>
+		</div>
+		<p id='notice'>
+		<?
+		if($_SESSION['alram']!=NULL)
+		{
+			echo($_SESSION['alram']);
+			$_SESSION['alram']=NULL;
+		}
+		?>
+		</p>
+		<input type="button" value="창닫기" onclick="exits();">
+		<script type="text/javascript">
+			function exits(){window.close();}
+		</script>
+	</div>	
+</body>
+</html>

@@ -1,0 +1,24 @@
+<?
+	if(!isset($_SESSION))
+	{
+		session_start();
+	}
+	include("p_db.php");
+	check_logged_in();
+?>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>오늘 어디까지 풀래 너?::Schedule</title>
+	<style>
+	div.edit{display: none;}
+	input.tab{display: none;}
+	input.tab:checked~div.edit{display: block;}
+	input.tab:checked~label>div.info{display: none;}
+	td{width: 160px;}
+	</style>
+</head>
+<body>
+	<?ViewSchedule($_GET["title"]);?>
+</body>
+</html>

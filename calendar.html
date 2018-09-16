@@ -1,0 +1,228 @@
+<?if(!isset($_SESSION))
+	{
+		session_start();
+	}
+	include("p_db.php");
+	check_logged_in();
+?>
+<head>
+<meta charset="utf-8">
+	<style>
+   *{font-family: "Malgun Gothic";}
+   <?
+   $id = $_SESSION["id"];
+   $connect = mysql_connect("localhost","root","apmsetup");
+    $db=mysql_select_db("planner",$connect);
+    $temasql="select theme from member where id='$id'";
+    $te=mysql_query($temasql);
+    $tenum=mysql_fetch_array($te);
+   ?>
+   *{font-family: "Malgun Gothic";}
+   div.when{float:right; margin-right: 50px;margin-top: 50px; padding:30px; width: 400px; height: 100px; border: 2px solid black;}
+   <?if (1==$tenum['theme']){?>
+   div.calender>table{background: url("irr.jpg"); background-repeat: no-repeat; }
+   div.tab_schedule, div.tab_todo{border: 5px solid #B70000;}
+   <? }?>
+   <?if (2==$tenum['theme']){?>
+   div.calender>table{background: url("mic2.gif"); background-repeat: no-repeat; }
+   div.tab_schedule, div.tab_todo{border: 5px solid #000000;}
+   <? }?>
+   <?if (3==$tenum['theme']){?>
+   div.calender>table{background: url("totor.jpg"); background-repeat: no-repeat; }
+   div.tab_schedule, div.tab_todo{border: 5px solid #35B62C;}
+   <? }?>
+   <?if (4==$tenum['theme']){?>
+   div.calender>table{background: url("min.jpg"); background-repeat: no-repeat; }
+   div.tab_schedule, div.tab_todo{border: 5px solid #003399;}
+   <? }?>
+
+   div.calender{width: 650px; height: 650px; float:left;}
+   img.add{float:right; width: 100px; height: 100px; top: 150px;}
+   td.dow{height: 60px;}
+   div.day{width: 80px; height: 25px; text-align: left;}
+   div.memo{height: 75px; width: 80px; line-height: 10px; color:black; font-size: 13px; font-weight: normal;}
+   div.schedule{height: 50px}
+   input.hidden{display: none;}
+   form{display:inline-block;}
+   td{text-align: center; width: 80px; height: 120px; background-color: rgba(255,255,255,0.3); border:0px;}
+   .SUN, .MON, .TUE, .WED, .THU, .FRI, .SAT{font-weight: bold;}
+   .SUN{color:red;}
+   .SAT{color:blue;}
+   .not_cur{color:gray;}
+   .holiday{color:red;}
+   div.tab-item{float:left; width: 400px; height: 450px; display: none; margin-top: 50px;}
+   div.tab-item table td{width: 200px;}
+   input.tab{display:none;}
+   img.mark{width: 20px; height: 20px;}
+   div.label_schedule{background-color: #7070FF; width: 84px; margin-left: -2px; border-top: 1px solid black; border-bottom: 1px solid black; margin-top:-1px;
+           padding: 2 0px; text-overflow: ellipsis; overflow: hidden}
+   div.label_todo{background-color: pink; width: 84px; margin-left: -2px; border-top: 1px solid black; border-bottom: 1px solid black; margin-top:-1px;
+           padding: 2 0px; text-overflow: ellipsis; overflow: hidden}
+   div.start{border-left: 1px solid black;}
+   div.end{border-right: 1px solid black;}
+   div.blank{height: 15px;}
+   div.plus{float:right;}
+   <?
+      for($i = 1; $i <= 31; $i++)
+      {
+         ?>
+            input#day<?=$i?>:checked~div.day<?=$i?>{display: block;}
+         <?
+      }
+   ?>
+   div.tab_schedule, div.tab_todo{height: 200px; margin-bottom: 30px;}
+   div.tab-item>table td{width: 150px; height: 100px;}
+   </style>
+</head>
+<body>
+	<div class="when">
+		<?
+			$daycount;
+			if($_GET)
+			{
+				$month = $_GET["month"];
+				$year = $_GET["year"];
+				if($month < 1 || $month > 12 || $year < 1950 || $year > 2100)
+				{
+					$year = date("Y");
+					$month = date("n");
+					$today = date("n");
+				}
+			}
+			else
+			{
+				$year = date("Y");
+				$month = date("n");
+				$today = date("n");
+			}
+			$daycount = array(0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
+			if(!($year % 4))
+				$daycount[2]++;			
+			$dow = date_format(date_create($year."-".$month."-01"), "w") % 7;
+			$dow_word = array("SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT");	
+		?>
+		<form action="" method="GET">
+			<input type="text" name="year" value="<?=$year?>">년 
+			<input type="text" name="month" value="<?=$month?>">월
+			<input type="submit" value="이동">
+		</form>
+		<br>
+		<form action="" method="GET">
+			<input type="text" name="year" value=<?=$year + floor(($month - 1 - 1)/12)?> class="hidden">
+			<input type="text" name="month" value=<?=($month - 1 + 11) % 12 + 1?> class="hidden">
+			<input type="submit" name="np" value="<">
+		</form>
+		<form action="" method="GET">
+			<input type="text" name="year" value=<?=$year + floor(($month - 1 + 1)/12)?> class="hidden">
+			<input type="text" name="month" value=<?=($month - 1 + 1) % 12 + 1?> class="hidden">
+			<input type="submit" name="np" value=">">
+		</form>
+	</div>
+	<div class="calender">
+		<table>
+			<tr>
+				<td class="dow">SUN</td>
+				<td class="dow">MON</td>
+				<td class="dow">TUE</td>
+				<td class="dow">WED</td>
+				<td class="dow">THU</td>
+				<td class="dow">FRI</td>
+				<td class="dow">SAT</td>
+			</tr>
+			<?
+				$day = $daycount[($month - 1 + 11) % 12 + 1] - $dow + 1;
+				$is_current_month = false;
+				if($day > $daycount[($month - 1 + 11) % 12 + 1])
+				{
+					$day = 1;
+					$is_current_month = true;
+				}
+				for($i = 0; $i < 6; $i++)
+				{
+					?>
+					<tr>
+						<?
+							for($j = 0; $j < 7; $j++)
+							{
+								if($is_current_month)
+								{
+									$date = date_format(date_create($year."-".$month."-".$day), "Y-m-d");
+									?>
+									<td class="<?=$dow_word[$dow++]?>
+										<?
+											if($chk = isHoliday($date, $str))
+											{
+												echo("holiday");
+											}
+										?>"
+									 ><label for="day<?=++$k?>"><div class="day">
+									 &nbsp;<?=$day++?></div>
+									 <div class="memo">
+									 	<div class="schedule">
+									 	<?if($chk) echo($str);?><br><br>
+									 	<?
+									 		$return1 = GetSchedule($date, 1);
+									 	?>
+									 	</div>
+									 	<div class="todo">
+									 		<?
+									 			$return2 = GetToDo($date, 1);
+									 		?>
+									 	</div>
+									 </div>
+									 
+									</label>
+									</td>
+									<?
+									if($dow >= 7)
+									{
+										$dow = 0;
+									}
+									if($day > $daycount[$month])
+									{
+										$is_current_month = false;
+										$day = 1;
+									}
+								}
+								else
+								{
+									?>
+									<td class="not_cur"><?=$day++?></td>
+									<?
+									if($daycount[($month - 1 + 11) % 12 + 1] < $day)
+									{
+										$day = 1;
+										$is_current_month = true;
+									}
+								}
+							}
+						?>
+					</tr>
+					<?
+				}
+			?>
+		</table>
+	</div>
+	<?
+		for($i = 1; $i <= 31; $i++)
+		{
+			?>
+				<input type="radio" name="tab" id="day<?=$i?>" class="tab">
+				<div class="tab-item day<?=$i?>">
+					<a href="Schedule.html" target="_blank"><img src="plus.bmp" class="add"></a>
+					<div class="tab_schedule">
+					<?
+						$date = date_format(date_create($year."-".$month."-".$i), "Y-m-d");
+						GetSchedule($date);
+					?>
+					</div>
+					<div class="tab_todo">
+					<?
+						GetToDo($date);
+					?>
+					</div>
+				</div>
+			<?
+		}
+	?>
+</body>

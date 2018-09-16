@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+<head>
+	<style>
+	body{width: 960px;}
+	#pagewrapper{width: 300px; left: auto;right: auto; border-radius: 25px; border: 3px solid olive;}
+	#pagewrapper>form{margin-left: 20px;}
+	</style>
+</head>
+<body>
+	<div id="pagewrapper">
+		<form action="insertTo_Do.php" method="post">
+			제목<input type="text" name="todo"><br/>
+			중요도<br/>
+			<input type="radio" name="star" value="1">★<br/>
+			<input type="radio" name="star" value="2">★★<br/>
+			<input type="radio" name="star" value="3">★★★<br/>
+			<input type="radio" name="star" value="4">★★★★<br/>
+			<input type="radio" name="star" value="5">★★★★★<br/>
+			시작일 <input type="date" name="start"><br/>
+			종료일 <input type="date" name="end"><br/>
+			설명 <textarea name="exp" row="5" col="20"></textarea></br>
+			완료 여부<br/> 
+			<input type="radio" name="finoryet" value="1">완료<br/>
+			<input type="radio" name="finoryet" value="2">미완료</br>
+			<input type="submit" value="일정추가및 수정"><input type="reset" value="다시작성">
+		</form>
+	</div>
+</body>
+</html>
